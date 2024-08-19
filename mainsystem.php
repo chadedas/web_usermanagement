@@ -1,6 +1,12 @@
 <?php
-include('session_check.php');
+session_start();
+// ตรวจสอบการเข้าสู่ระบบ
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
 ?>
+
 <!doctype php>
 <html lang="en">
 
@@ -62,9 +68,9 @@ include('session_check.php');
                 <?php if (!empty($data)): ?>
                   <?php foreach ($data as $row): ?>
                     <tr class="text-center">
-                      <td><?= htmlspecialchars($row['firstname']) ?></td>
-                      <td><?= htmlspecialchars($row['lastname']) ?></td>
-                      <td><?= htmlspecialchars($row['username']) ?></td>
+                      <td><?php echo htmlspecialchars($row['firstname']); ?></td>
+                      <td><?php echo htmlspecialchars($row['lastname']); ?></td>
+                      <td><?php echo htmlspecialchars($row['username']); ?></td>
                       <td>
                         <?php
                           if ($row['permission'] === 'admin') {
@@ -76,14 +82,14 @@ include('session_check.php');
                           }
                         ?>
                       </td>
-                      <td><?= htmlspecialchars($row['date']) ?></td>
+                      <td><?php echo htmlspecialchars($row['date']); ?></td>
                       <td class="btn-group-inline">
                         <form action="edituser.php" method="get">
-                          <input type="hidden" name="username" value="<?= htmlspecialchars($row['username']) ?>">
+                          <input type="hidden" name="username" value="<?php echo htmlspecialchars($row['username']); ?>">
                           <button type="submit" class="btn btn-success btn-sm fw-bold">แก้ไขข้อมูล</button>
                         </form>
                         <form action="editpassword.php" method="get">
-                          <input type="hidden" name="username" value="<?= htmlspecialchars($row['username']) ?>">
+                          <input type="hidden" name="username" value="<?php echo htmlspecialchars($row['username']); ?>">
                           <button type="submit" class="btn btn-danger btn-sm fw-bold">เปลี่ยนรหัสผ่าน</button>
                         </form>
                       </td>

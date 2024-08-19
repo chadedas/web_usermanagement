@@ -1,6 +1,11 @@
 <?php
 include('connection.php');
-include('session_check.php');
+session_start();
+// ตรวจสอบการเข้าสู่ระบบ
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
 $success = isset($_GET['success']) ? $_GET['success'] : '';
 ?>
 <!doctype html>

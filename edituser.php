@@ -1,6 +1,11 @@
 <?php
 include('connection.php');
-include('session_check.php');
+session_start();
+// ตรวจสอบการเข้าสู่ระบบ
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
 
 // รับ username จาก URL
 if (isset($_GET['username'])) {
@@ -28,7 +33,7 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Edit User Information</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="style_edituser.css">
+  <link rel="stylesheet" type="text/css" href="CSS/style_edituser.css">
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500&display=swap" rel="stylesheet">
   <style>
@@ -65,25 +70,25 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
             <div class="col-md-6">
               <div class="form-group">
                 <label for="firstname" class="form-label">ชื่อจริง</label>
-                <input type="text" name="firstname" id="firstname" class="form-control" placeholder="ชื่อจริง *" value="<?= htmlspecialchars($user['firstname']) ?>" required />
+                <input type="text" name="firstname" id="firstname" class="form-control" placeholder="ชื่อจริง *" value="<?php echo htmlspecialchars($user['firstname']); ?>" required />
               </div>
               <div class="form-group">
                 <label for="lastname" class="form-label">นามสกุล</label>
-                <input type="text" name="lastname" id="lastname" class="form-control" placeholder="นามสกุล *" value="<?= htmlspecialchars($user['lastname']) ?>" required />
+                <input type="text" name="lastname" id="lastname" class="form-control" placeholder="นามสกุล *" value="<?php echo htmlspecialchars($user['lastname']); ?>" required />
               </div>
               <div class="form-group">
                 <label for="permission" class="form-label">สิทธิ์การเข้าถึง</label>
                 <!-- Permission Dropdown -->
                 <select name="permission" id="permission" class="form-control" required>
-                  <option value="admin" <?= $user['permission'] == 'admin' ? 'selected' : '' ?>>แอดมินผู้ดูแล</option>
-                  <option value="user" <?= $user['permission'] == 'user' ? 'selected' : '' ?>>ผู้ใช้ปกติ</option>
+                  <option value="admin" <?php echo $user['permission'] == 'admin' ? 'selected' : '' ?>>แอดมินผู้ดูแล</option>
+                  <option value="user" <?php echo $user['permission'] == 'user' ? 'selected' : '' ?>>ผู้ใช้ปกติ</option>
                 </select>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label for="username" class="form-label">ชื่อผู้ใช้</label>
-                <input type="text" name="username" id="username" class="form-control" placeholder="Username *" value="<?= htmlspecialchars($user['username']) ?>" readonly />
+                <input type="text" name="username" id="username" class="form-control" placeholder="Username *" value="<?php echo htmlspecialchars($user['username']); ?>" readonly />
               </div>
 
               <input type="submit" class="btn btn-primary btnRegister" value="ยืนยัน" />
@@ -103,7 +108,7 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
         function redirectToChangePassword() {
-      const username = '<?= htmlspecialchars($user['username']) ?>';
+      const username = '<?php echo htmlspecialchars($user['username']); ?>';
       window.location.href = `editpassword.php?username=${username}`;
     }
     document.addEventListener('DOMContentLoaded', function() {
@@ -130,7 +135,7 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
       <?php endif; ?>
     });
     function confirmDelete() {
-      const username = '<?= htmlspecialchars($user['username']) ?>';
+      const username = '<?php echo htmlspecialchars($user['username']); ?>';
       if (confirm("คุณแน่ใจหรือว่าต้องการลบผู้ใช้นี้?")) {
         window.location.href = `delete_user.php?username=${username}`;
       }

@@ -2,6 +2,7 @@
 include('connection.php');  
 session_start();
 
+
 $username = $_POST['user'];  
 $password = $_POST['pass'];  
    
@@ -21,6 +22,8 @@ if ($row && password_verify($password, $row['password'])) {
     $_SESSION['username'] = $username;
     $_SESSION['permission'] = $row['permission']; // คุณสามารถเก็บสิ่งอื่นๆ ได้ที่นี่
 
+        // ทดสอบการแสดงผลเซสชัน
+        echo 'Session Username: ' . $_SESSION['username'];
     echo "
     <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
     <script>

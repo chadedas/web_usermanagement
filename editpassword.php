@@ -1,6 +1,12 @@
 <?php
 include('connection.php');
-include('session_check.php');
+session_start();
+// ตรวจสอบการเข้าสู่ระบบ
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
 
 // รับ username จาก URL
 if (isset($_GET['username'])) {
@@ -69,7 +75,7 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
                 <label for="confirm_password" class="form-label">ยืนยันรหัสผ่าน</label>
                 <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm Password *" required />
               </div>
-              <input type="hidden" name="username" value="<?= htmlspecialchars($user['username']) ?>">
+              <input type="hidden" name="username" value="<?php echo htmlspecialchars($user['username']); ?>">
               <input type="submit" class="btnRegister" value="ยืนยัน" />
             </div>
           </div>
@@ -87,7 +93,7 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
         title: 'รหัสผ่านไม่ถูกต้อง',
         text: 'รหัสผ่านไม่ตรงกัน',
       }).then(function() {
-        window.location = 'FRONT_END/editpassword.php?username=' + encodeURIComponent('<?= htmlspecialchars($user['username']) ?>');
+        window.location = 'FRONT_END/editpassword.php?username=' + encodeURIComponent('<?php echo htmlspecialchars($user['username']); ?>');
       });
     <?php elseif ($success == 'password_updated'): ?>
       Swal.fire({

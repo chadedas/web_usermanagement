@@ -20,5 +20,3 @@ if (mysqli_query($con, $sql)) {
 } else {
     echo "Error updating record: " . mysqli_error($con);
 }
-
-?>
