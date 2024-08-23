@@ -6,21 +6,19 @@ if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
-?>
-
 // รับ username จาก URL
 if (isset($_GET['username'])) {
-    $username = mysqli_real_escape_string($con, $_GET['username']);
-    
-    // ดึงข้อมูลผู้ใช้จากฐานข้อมูล
-    $result = mysqli_query($con, "SELECT * FROM login WHERE username = '$username'");
-    $user = mysqli_fetch_assoc($result);
+  $username = mysqli_real_escape_string($con, $_GET['username']);
+  
+  // ดึงข้อมูลผู้ใช้จากฐานข้อมูล
+  $result = mysqli_query($con, "SELECT * FROM login WHERE username = '$username'");
+  $user = mysqli_fetch_assoc($result);
 
-    if (!$user) {
-        die("User not found.");
-    }
+  if (!$user) {
+      die("User not found.");
+  }
 } else {
-    die("Username is not specified.");
+  die("Username is not specified.");
 }
 
 $error = isset($_GET['error']) ? $_GET['error'] : '';
@@ -36,7 +34,8 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Edit Password</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="style_edituser.css">
+  <link rel="stylesheet" type="text/css" href="CSS/style_edituser.css">
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">  
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
@@ -103,7 +102,7 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
         timer: 1000,
         timerProgressBar: true
       }).then(function() {
-        window.location = 'FRONT_END/mainsystem.php'; // เปลี่ยนเส้นทางไปยังหน้า mainsystem.php
+        window.location = 'mainsystem.php'; // เปลี่ยนเส้นทางไปยังหน้า mainsystem.php
       });
     <?php endif; ?>
   });
