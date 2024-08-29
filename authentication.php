@@ -48,7 +48,7 @@ if ($row && password_verify($password, $row['password'])) {
                     title: 'ไม่สามารถเข้าสู่ระบบได้',
                     text: 'คุณไม่มีสิทธิ์ในการเข้าถึงระบบนี้',
                 }).then(function() {
-                    window.location = 'login.php'; // เปลี่ยนเส้นทางกลับไปยังหน้า login
+                    window.location = 'index.php'; // เปลี่ยนเส้นทางกลับไปยังหน้า login
                 });
             });
         </script>";
@@ -63,7 +63,7 @@ if ($row && password_verify($password, $row['password'])) {
                 title: 'ไม่สามารถเข้าสู่ระบบได้',
                 text: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
             }).then(function() {
-                window.location = 'login.php'; // เปลี่ยนเส้นทางกลับไปยังหน้า login
+                window.location = 'index.php'; // เปลี่ยนเส้นทางกลับไปยังหน้า login
             });
         });
     </script>";

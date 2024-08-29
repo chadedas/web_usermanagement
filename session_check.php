@@ -12,7 +12,7 @@ session_start();
 
 // ตรวจสอบว่าผู้ใช้ไม่ได้ล็อกอินหรือไม่
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php");  // ถ้าไม่ได้ล็อกอิน ให้เปลี่ยนเส้นทางไปยังหน้า login
+    header("Location: index.php");  // ถ้าไม่ได้ล็อกอิน ให้เปลี่ยนเส้นทางไปยังหน้า login
     exit();
 }
 
@@ -20,7 +20,7 @@ if (!isset($_SESSION['username'])) {
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
     session_unset();    // ลบข้อมูลเซสชัน
     session_destroy();  // ทำลายเซสชัน
-    header("Location: login.php");  // เปลี่ยนเส้นทางไปยังหน้า login
+    header("Location: index.php");  // เปลี่ยนเส้นทางไปยังหน้า login
     exit();
 }
 

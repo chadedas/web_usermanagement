@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (isset($_SESSION['username'])) {
+    header("Location: mainsystem.php");
+    exit;
+}
+?>
 <!doctype html>
 <html lang="en">
 
