@@ -104,9 +104,28 @@ if (!isset($_SESSION['username'])) {
                         }
                         ?>
                       </td>
-                      <td><?php echo htmlspecialchars($row['licenseKey']); ?></td>
+                      <td class=""><?php echo htmlspecialchars(substr($row['licenseKey'], 0, 4) . '-' . substr($row['licenseKey'], 4, 4) . '-' . substr($row['licenseKey'], 8, 4) . '-' . substr($row['licenseKey'], 12, 4)); ?></td>
+
+
                       <td><?php echo htmlspecialchars($row['date']); ?></td>
-                      <td><?php echo htmlspecialchars($row['EXPDATE']); ?></td>
+                      <td>
+                        <?php
+                        if ($row['EXPDATE'] === null) {
+                          echo 'ถาวร';
+                        } else {
+                          $expDate = new DateTime($row['EXPDATE']);
+                          $today = new DateTime();
+                          $interval = $today->diff($expDate);
+
+                          if ($expDate < $today) {
+                            echo htmlspecialchars($row['EXPDATE']) . '<br><small class="text-danger">หมดอายุแล้ว</small>';
+                          } else {
+                            echo htmlspecialchars($row['EXPDATE']) . '<br><small class="text-muted">(อีก ' . $interval->days . ' วัน)</small>';
+                          }
+                        }
+                        ?>
+                      </td>
+
                       <td class="text-center">
                         <form action="edituser.php" method="get" class="d-inline-block">
                           <input type="hidden" name="username" value="<?php echo htmlspecialchars($row['username']); ?>">

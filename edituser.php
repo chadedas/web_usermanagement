@@ -3,8 +3,8 @@ include('connection.php');
 session_start();
 // ตรวจสอบการเข้าสู่ระบบ
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
-    exit();
+  header("Location: login.php");
+  exit();
 }
 
 // รับ username จาก URL
@@ -84,6 +84,18 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
                   <option value="user" <?php echo $user['permission'] == 'user' ? 'selected' : '' ?>>ผู้ใช้ปกติ</option>
                 </select>
               </div>
+              <label for="expdate_input" class="form-label">วันที่หมดอายุ</label>
+              <select name="expdate" id="expdate" class="form-control" onchange="toggleDateInput()" required>
+                <option value="nothas" <?php echo ($user['EXPDATE'] === null) ? 'selected' : ''; ?>>ไม่จำกัด</option>
+                <option value="has" <?php echo ($user['EXPDATE'] !== null) ? 'selected' : ''; ?>>เวลาจำกัด</option>
+              </select>
+              <label class="form-label"></label>
+              <div id="datePicker" style="display: <?php echo ($user['EXPDATE'] !== null) ? 'block' : 'none'; ?>;">
+                <div class="form-group">
+
+                  <input type="date" name="expdate_input" id="expdate_input" class="form-control" value="<?php echo $user['EXPDATE'] !== null ? htmlspecialchars($user['EXPDATE']) : ''; ?>" />
+                </div>
+              </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
@@ -96,9 +108,9 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
               <!-- Button to change password -->
               <button type="button" class="btn btn-danger btnRegister" onclick="redirectToChangePassword()">เปลี่ยนรหัสผ่าน</button>
               <?php if ($_SESSION['username'] != $user['username']): ?>
-                            <!-- ปุ่มลบผู้ใช้ -->
-                            <button type="button" class="btn btn-danger btnRegister" onclick="confirmDelete()">ลบผู้ใช้นี้</button>
-                            <?php endif; ?>
+                <!-- ปุ่มลบผู้ใช้ -->
+                <button type="button" class="btn btn-danger btnRegister" onclick="confirmDelete()">ลบผู้ใช้นี้</button>
+              <?php endif; ?>
             </div>
           </div>
         </form>
@@ -107,7 +119,7 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-        function redirectToChangePassword() {
+    function redirectToChangePassword() {
       const username = '<?php echo htmlspecialchars($user['username']); ?>';
       window.location.href = `editpassword.php?username=${username}`;
     }
@@ -122,24 +134,61 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
         }).then(function() {
           window.location = 'mainsystem.php'; // เปลี่ยนเส้นทางไปยังหน้า mainsystem.php
         });
-        <?php elseif ($success == 'user_deleted'): ?>
-      Swal.fire({
-        title: 'ลบผู้ใช้สำเร็จ',
-        text: 'คุณจะถูกเปลี่ยนเส้นทางไปยังระบบหลัก',
-        icon: 'success',
-        timer: 1000,
-        timerProgressBar: true
-      }).then(function() {
-        window.location = 'mainsystem.php'; // เปลี่ยนเส้นทางไปยังหน้า mainsystem.php
-      });
+      <?php elseif ($success == 'user_deleted'): ?>
+        Swal.fire({
+          title: 'ลบผู้ใช้สำเร็จ',
+          text: 'คุณจะถูกเปลี่ยนเส้นทางไปยังระบบหลัก',
+          icon: 'success',
+          timer: 1000,
+          timerProgressBar: true
+        }).then(function() {
+          window.location = 'mainsystem.php'; // เปลี่ยนเส้นทางไปยังหน้า mainsystem.php
+        });
       <?php endif; ?>
     });
+
     function confirmDelete() {
       const username = '<?php echo htmlspecialchars($user['username']); ?>';
       if (confirm("คุณแน่ใจหรือว่าต้องการลบผู้ใช้นี้?")) {
         window.location.href = `delete_user.php?username=${username}`;
       }
     }
+  </script>
+  <script>
+    // ฟังก์ชันสำหรับตั้งค่าวันที่ต่ำสุดของ date input
+    function setMinDate() {
+      var today = new Date();
+      // ตั้งค่าเขตเวลาเป็นประเทศไทย
+      today.setHours(today.getHours() + 7);
+
+      // แปลงวันที่ปัจจุบันเป็นรูปแบบ YYYY-MM-DD
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); // มกราคม = 0
+      var yyyy = today.getFullYear();
+
+      var minDate = yyyy + '-' + mm + '-' + dd;
+      document.getElementById('expdate_input').setAttribute('min', minDate);
+    }
+
+    // ฟังก์ชันสำหรับแสดงหรือซ่อน date input
+    function toggleDateInput() {
+      var expdate = document.getElementById('expdate').value;
+      var datePicker = document.getElementById('datePicker');
+
+      if (expdate === 'has') {
+        datePicker.style.display = 'block';
+        document.getElementById('expdate_input').setAttribute('required', 'required');
+        setMinDate(); // ตั้งค่าวันที่ต่ำสุด
+      } else {
+        datePicker.style.display = 'none';
+        document.getElementById('expdate_input').removeAttribute('required');
+      }
+    }
+
+    // เรียกฟังก์ชันตั้งค่าวันที่ต่ำสุดเมื่อโหลดหน้าเพจ
+    document.addEventListener('DOMContentLoaded', function() {
+      toggleDateInput();
+    });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script src="main.js"></script>
