@@ -2,8 +2,8 @@
 session_start();
 // ตรวจสอบการเข้าสู่ระบบ
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
-    exit();
+  header("Location: login.php");
+  exit();
 }
 ?>
 
@@ -22,8 +22,28 @@ if (!isset($_SESSION['username'])) {
       font-family: 'Kanit', sans-serif;
       scroll-behavior: smooth;
     }
-    .btn-group-inline form {
-      display: inline-block;
+
+    .container {
+      max-width: 100%;
+      /* ขยายคอนเทนเนอร์ให้เต็มหน้าจอ */
+      padding-left: 0;
+      /* ยกเลิกการเว้นระยะขอบด้านซ้าย */
+      padding-right: 0;
+      /* ยกเลิกการเว้นระยะขอบด้านขวา */
+    }
+
+    .card {
+      margin-left: 0;
+      /* ลดการเว้นระยะขอบด้านซ้ายของการ์ด */
+      margin-right: 0;
+      /* ลดการเว้นระยะขอบด้านขวาของการ์ด */
+    }
+
+    .card-body {
+      padding-left: 15px;
+      /* ปรับ padding ด้านซ้าย */
+      padding-right: 15px;
+      /* ปรับ padding ด้านขวา */
     }
   </style>
 </head>
@@ -42,13 +62,15 @@ if (!isset($_SESSION['username'])) {
               <a href="logout.php"><button type="button" class="btn btn-sm btn-danger shadow-sm mb-1 mt-1 ms-2">Logout</button></a>
             </div>
             <table class="table align-middle mb-0 bg-white table-hover">
-            <thead class="bg-light">
+              <thead class="bg-light">
                 <tr class="fw-bold text-center">
                   <th>ชื่อ</th>
                   <th>นามสกุล</th>
                   <th>ชื่อผู้ใช้</th>
                   <th>สิทธิ์การแก้ไข</th>
+                  <th>รหัสคีย์</th>
                   <th>วันที่เพิ่ม</th>
+                  <th>วันหมดอายุ</th>
                   <th>แก้ไข</th>
                 </tr>
               </thead>
@@ -57,7 +79,7 @@ if (!isset($_SESSION['username'])) {
                 include('connection.php');
 
                 // Query to select data from Persons table
-                $result = mysqli_query($con, "SELECT firstname, lastname, username, permission, date FROM login");
+                $result = mysqli_query($con, "SELECT firstname, lastname, username, permission, date,licenseKey,EXPDATE FROM login");
 
                 if ($result) {
                   $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -73,22 +95,24 @@ if (!isset($_SESSION['username'])) {
                       <td><?php echo htmlspecialchars($row['username']); ?></td>
                       <td>
                         <?php
-                          if ($row['permission'] === 'admin') {
-                            echo 'ผู้ดูแล';
-                          } elseif ($row['permission'] === 'user') {
-                            echo 'ผู้ใช้ปกติ';
-                          } else {
-                            echo 'สิทธิ์ไม่ทราบ';
-                          }
+                        if ($row['permission'] === 'admin') {
+                          echo 'ผู้ดูแล';
+                        } elseif ($row['permission'] === 'user') {
+                          echo 'ผู้ใช้ปกติ';
+                        } else {
+                          echo 'สิทธิ์ไม่ทราบ';
+                        }
                         ?>
                       </td>
+                      <td><?php echo htmlspecialchars($row['licenseKey']); ?></td>
                       <td><?php echo htmlspecialchars($row['date']); ?></td>
-                      <td class="btn-group-inline">
-                        <form action="edituser.php" method="get">
+                      <td><?php echo htmlspecialchars($row['EXPDATE']); ?></td>
+                      <td class="text-center">
+                        <form action="edituser.php" method="get" class="d-inline-block">
                           <input type="hidden" name="username" value="<?php echo htmlspecialchars($row['username']); ?>">
                           <button type="submit" class="btn btn-success btn-sm fw-bold">แก้ไขข้อมูล</button>
                         </form>
-                        <form action="editpassword.php" method="get">
+                        <form action="editpassword.php" method="get" class="d-inline-block ms-2">
                           <input type="hidden" name="username" value="<?php echo htmlspecialchars($row['username']); ?>">
                           <button type="submit" class="btn btn-danger btn-sm fw-bold">เปลี่ยนรหัสผ่าน</button>
                         </form>

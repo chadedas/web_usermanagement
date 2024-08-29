@@ -95,11 +95,11 @@ $success = isset($_GET['success']) ? $_GET['success'] : '';
 
               <!-- Button to change password -->
               <button type="button" class="btn btn-danger btnRegister" onclick="redirectToChangePassword()">เปลี่ยนรหัสผ่าน</button>
-              <!-- ปุ่มลบผู้ใช้ -->
-              <button type="button" class="btn btn-danger btnRegister" onclick="confirmDelete()">ลบผู้ใช้นี้</button>
-
+              <?php if ($_SESSION['username'] != $user['username']): ?>
+                            <!-- ปุ่มลบผู้ใช้ -->
+                            <button type="button" class="btn btn-danger btnRegister" onclick="confirmDelete()">ลบผู้ใช้นี้</button>
+                            <?php endif; ?>
             </div>
-
           </div>
         </form>
       </div>
